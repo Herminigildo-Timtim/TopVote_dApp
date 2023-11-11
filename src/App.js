@@ -254,7 +254,7 @@ const votePost = async () => {
         postList();
         commentList();
       }
-  }, [walletAddress]);
+  }, [walletAddress,commentList,postList]);
 
   const viewTransaction = () => {
     if (walletAddress) {
