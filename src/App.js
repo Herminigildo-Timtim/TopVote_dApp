@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { MDBCol } from "mdbreact";
+import React, { useEffect, useState } from "react";
 import * as Web3 from '@solana/web3.js';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -18,7 +16,6 @@ function App() {
   const PROGRAM_ID = new PublicKey(idl.metadata.address);
   
   const [walletAddress, setWalletAddress] = useState(null);
-  const [walletConnected, setWalletConnected] = useState(false);
   const [balance, setBalance] = useState(null);
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState([]);
@@ -43,7 +40,6 @@ function App() {
       if (solana) {
         const response = await solana.connect();
         setWalletAddress(response.publicKey.toString());
-        setWalletConnected(true);
   
         // Move the console.log after setting the state
         console.log("Wallet Address:", response.publicKey.toString());
@@ -210,9 +206,7 @@ const votePost = async () => {
   }
 };
 
-  const parseWalletKey = (string) => {
-    return `${string.slice(0, 7)}....`;
-  };
+
   const renderNotConnectedContainer = () => (
     <button className="btn" type="button" onClick={connectWallet}>
       <strong>CONNECT</strong>
@@ -238,7 +232,6 @@ const votePost = async () => {
   
           // Clear wallet-related state
           setWalletAddress(null);
-          setWalletConnected(false);
           setBalance(null);
   
           // Log a message for successful disconnection
@@ -472,23 +465,6 @@ const renderModal1 = () => {
     return () => window.removeEventListener("load", onLoad);
   }, [walletAddress]);
   
-
-  const checkIfWalletIsConnected = async () => {
-    try {
-      if (window?.solana?.isPhantom) {
-        console.log("Phantom wallet found!");
-        const response = await window.solana.connect({ onlyIfTrusted: true});
-        console.log("Connected with Public Key:", response.publicKey.toString());
-        setWalletAddress(response.publicKey.toString());
-        const adjustedBalance = await fetchBalance(response.publicKey.toString());
-        console.log("Connected with balance:", adjustedBalance);
-      } else {
-        alert("Solana object not found! Get a Phantom Wallet ");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   
 
   const fetchBalance = async (walletAddress) => {
